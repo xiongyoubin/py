@@ -1,2 +1,2 @@
 # GZbangbang
-hahhaha
+跟着我一起学python
