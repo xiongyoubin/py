@@ -31,6 +31,67 @@ def foo() :
 foo()
 
 
+# 现在如果有新的函数add（x，y）带形参，将功能函数加定长参数
+# 对装饰器调用机制的加深理解的例子
+def show_time1(f) :
+    def inner(x,y):
+        start = time.time()
+        f(x,y)
+        time.sleep(2)
+        end = time.time()
+        print('花了时间为%d秒'%(end-start))
+    return  inner
+@show_time1
+# 将功能函数add传参改变以后相应的inner函数也要改
+# 因为装饰器首先走 add = show_time1（add），因此先拿到inner函数，inner函数要将add的两个参数带上
+# 以上为装饰器的调用流程
+def add(x,y):
+    print(x+y)
+add(1,2)
+
+
+# 不定长累加,将功能函数加不定长参数
+# add(1,2,3,4,5)
+def show_time2(f) :
+    def inner(*x,**y):
+        start = time.time()
+        f(*x,**y)
+        time.sleep(3)
+        end = time.time()
+        print('花了时间为%d秒'%(end-start))
+    return  inner
+@show_time2
+def add(*a,**b):
+    s=0
+    for i in a:
+        s = s +i
+    print(s)
+add(1,2,3,4,5)
+# 装饰器参数
+# 给装饰器传入参数（相当于给装饰器加一个闭包，从外面加入一个参数）flag
+# 场景1：如果我想给foo函数打印日志记录，但是不想让bar函数打印日志记录
+def logger(flag='false'):
+    def show_time1(f):
+        def inner(x, y):
+            start = time.time()
+            f(x, y)
+            time.sleep(2)
+            end = time.time()
+            print('花了时间为%d秒' % (end - start))
+            if flag == 'ture':
+                print('打印日志记录')
+        return inner
+    return show_time1
+@logger('ture')   #相当于 @show_time1，加了一个闭包，通过闭包传参数
+def add(x,y):
+    print(x+y)
+add(1,2)
+
+
+
+
+
+
 
 
 
